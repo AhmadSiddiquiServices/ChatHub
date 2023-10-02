@@ -1,37 +1,37 @@
-const express= require('express');
-const cors = require('cors')
-const dotenv = require('dotenv')
-const colors = require('colors')
+const express = require("express");
+const cors = require("cors");
+const dotenv = require("dotenv");
+const colors = require("colors");
+const cookieParser = require("cookie-parser");
 
 // Import Files
-const DbConnection = require('./db/DbConnection')
+const DbConnection = require("./db/DbConnection");
+const userRoutes = require("./routes/userRoutes");
+const authorizedPagesRoutes = require("./routes/authorizedPagesRoutes");
+const messageRoutes = require("./routes/messageRoutes");
 
-
-const app = express()
-dotenv.config()
+const app = express();
+dotenv.config();
 
 // Database Connection
-DbConnection()
+DbConnection();
 
 // middlewares
-app.use(cors())
-app.use(express.json())
+app.use(cors({ origin: true, credentials: true }));
+app.use(express.json());
+app.use(cookieParser());
+const PORT = process.env.PORT || 8000;
 
+// Routes
+app.use("/api/auth", userRoutes);
+app.use("/", authorizedPagesRoutes);
+app.use("/api/messages", messageRoutes);
 
-const PORT = process.env.PORT || 8000
-
-
-
-app.get('/', (req, res) => {
-    res.send("Hello From the Server!!!")
-})
-
-
-
-
-
+// app.get("/", authenticate, (req, res) => {
+//   res.json({ status: true, msg: "Chat Page!", user: req.user });
+// });
 
 // Server Listen
 app.listen(PORT, () => {
-    console.log(colors.blue.inverse(`Server is Listening on PORT ${PORT}`))
-})
+  console.log(colors.blue.inverse(`Server is Listening on PORT ${PORT}`));
+});
