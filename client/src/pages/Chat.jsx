@@ -61,15 +61,18 @@ const Chat = () => {
   }, []);
 
   useEffect(() => {
+    console.log("Entered in ChatHub");
     const fetchUserData = async () => {
       if (currentUser) {
+        console.log("currentUser ==> ", currentUser);
         if (currentUser.isAvatarImageSet) {
           const { data } = await axios.get(
             `/api/auth/allUsers/${currentUser._id}`
           );
           setLoading(false);
           setContacts(data);
-        } else {
+        } 
+        else {
           navigate("/setAvatar");
         }
       }

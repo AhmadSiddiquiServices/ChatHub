@@ -3,13 +3,15 @@ import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Buffer } from "buffer";
+import multiavatar from "@multiavatar/multiavatar";
+
 
 // Import Files
 import Loader from "../components/Loader";
 import axios from "../components/axios";
 
 const SetAvatar = () => {
-  const api = "https://api.multiavatar.com/";
+  const api = "https://api.multiavatar.com";
   const navigate = useNavigate();
 
   const toastOptions = {
@@ -67,26 +69,44 @@ const SetAvatar = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchAvatars = async () => {
-      const data = [];
-      for (let i = 0; i < 4; i++) {
-        const image = await axios.get(
-          `${api}/${Math.round(Math.random() * 1000)}`
-        );
+  // useEffect(() => {
+  //   const fetchAvatars = async () => {
+  //     const data = [];
+  //     for (let i = 0; i < 4; i++) {
+  //       const image = await axios.get(
+  //         `${api}/${Math.round(Math.random() * 1000)}`
+  //       );
 
-        const buffer = new Buffer(image.data);
-        data.push(buffer.toString("base64"));
-      }
+  //       const buffer = new Buffer(image.data);
+  //       data.push(buffer.toString("base64"));
+  //     }
 
-      setAvatars(data);
-      setLoading(false);
-    };
-    checkAuthorization();
-    fetchAvatars();
-  }, []);
+  //     setAvatars(data);
+  //     setLoading(false);
+  //   };
+  //   checkAuthorization();
+  //   fetchAvatars();
+  // }, []);
 
   // Check if Avatar Already Selected;
+  
+useEffect(() => {
+  const fetchAvatars = () => {
+    const data = [];
+    for (let i = 0; i < 4; i++) {
+      const svgCode = multiavatar(Math.round(Math.random() * 1000).toString());
+      const base64 = btoa(unescape(encodeURIComponent(svgCode)));
+      data.push(base64);
+    }
+    setAvatars(data);
+    setLoading(false);
+  };
+
+  checkAuthorization();
+  fetchAvatars();
+}, []);
+
+  
   useEffect(() => {
     const fetchFromLocal = async () => {
       const userData = await JSON.parse(localStorage.getItem("user"));
