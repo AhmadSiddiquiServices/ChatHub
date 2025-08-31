@@ -56,6 +56,8 @@ const loginController = async (req, res) => {
     res.cookie("jwToken", token, {
       expires: new Date(Date.now() + 86400000),
       httpOnly: true,
+      secure: true, // Render uses HTTPS → must be true
+      sameSite: "none", // needed for cross-site requests
     });
 
     return res.json({

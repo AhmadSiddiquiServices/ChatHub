@@ -17,7 +17,12 @@ dotenv.config();
 DbConnection();
 
 // middlewares
-app.use(cors({ origin: true, credentials: true }));
+app.use(
+  cors({
+    origin: "https://chat-hub-smoky.vercel.app",
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(cookieParser());
 const PORT = process.env.PORT || 8000;
